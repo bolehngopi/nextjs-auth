@@ -16,8 +16,12 @@ import { format } from "date-fns";
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== "ADMIN") {
+  if (session.user.role !== "ADMIN") {
     redirect("/dashboard");
+  }
+
+  if (!session) {
+    redirect("/auth/signin");
   }
 
   const users = await prisma.user.findMany({
